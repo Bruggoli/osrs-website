@@ -1,0 +1,108 @@
+extends layout
+
+block content
+  .container
+    h1= title
+    
+    // Search form
+    .search-section
+      form(action='/search' method='GET')
+        .form-group
+          label(for='playerName') Player Name:
+          input(type='text' id='playerName' name='playerName' placeholder='Enter OSRS username' required maxlength='12')
+        button(type='submit') Search Player
+    
+    // Show image if provided
+    if img
+      .image-section
+        img(src=img alt='RuneScape Item' style='max-width: 100px; height: auto;')
+    
+    // Error handling
+    if error
+      .error-message(style='color: red; margin: 20px 0; padding: 10px; background-color: #ffebee; border-radius: 4px;')
+        p= error
+    
+    // Results table
+    if data.skills && data.skills.length > 0
+      .results-section
+        h2 Stats for #{playerName || 'Player'}
+        
+        table.stats-table(border='1' style='border-collapse: collapse; width: 100%; margin-top: 20px;')
+          thead
+            tr
+              th(style='padding: 10px; background-color: #f5f5f5;') Skill
+              th(style='padding: 10px; background-color: #f5f5f5;') Rank  
+              th(style='padding: 10px; background-color: #f5f5f5;') Level
+              th(style='padding: 10px; background-color: #f5f5f5;') Experience
+          tbody
+            each skill in data.skills
+              tr
+                td(style='padding: 8px; border: 1px solid #ddd;')= skill.name
+                td(style='padding: 8px; border: 1px solid #ddd;')= skill.rank === '-1' ? 'Unranked' : skill.rank
+                td(style='padding: 8px; border: 1px solid #ddd;')= skill.level
+                td(style='padding: 8px; border: 1px solid #ddd;')= skill.xp
+    else if playerName && !error
+      .no-data
+        p No stats found for #{playerName}
+
+  style.
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .search-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    
+    .results-section h2 {
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    
+    .stats-table {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .image-section {
+      text-align: center;
+      margin: 20px 0;
+    }
