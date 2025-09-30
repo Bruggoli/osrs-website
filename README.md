@@ -23,3 +23,9 @@ npm i
 npm run dev
 ```
 * The webpage should now be running at localhost:3000!
+
+<p>This page doesnt depend on a .env, so it should work out of the box. The hardcoded port is 3000, but can be overwritten if you make a file in the root dir called .env with whatever port you want to listen to</p>
+
+```env
+PORT="1-800-YOUR-PORT-HERE"
+```
