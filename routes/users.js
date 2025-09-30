@@ -13,6 +13,6 @@ router.post('/search', async function(req, res, next) {
   try {
 
   } catch (e) {
-    console.error("POST error" + e);
+    console.error("POST error:" + e);
   }
 })
