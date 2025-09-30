@@ -4,9 +4,22 @@ Its normal JS, Express, Pug/Jade. I thought using React for this project would b
 if i end up wanting to increase the scope.</p>
 
 <h3>TO RUN</h3>
-Make sure you have Node installed<br>
-```node -v
-```<br>
-Clone the repo<br>
-Open the repo in your favourite editor<br>
-From the root folder of the repo<br>
+
+* Make sure you have Node installed<br>
+
+```shell
+node -v
+```
+* Clone the repo<br>
+* Open the repo in your favourite editor<br>
+* Open a terminal or command line in the root directory of the project, run
+
+```shell
+npm i
+```
+* Then run the following to start the server
+
+```shell
+npm run dev
+```
+* The webpage should now be running at localhost:3000!
