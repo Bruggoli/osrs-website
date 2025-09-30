@@ -3,19 +3,26 @@ extends layout
 block content
   .container
     h1= title
+    link(rel='icon')
     
     // Search form
     .search-section
-      form(action='/search' method='GET')
+      form(action='/' method='GET')
         .form-group
           label(for='playerName') Player Name:
           input(type='text' id='playerName' name='playerName' placeholder='Enter OSRS username' required maxlength='12')
+
+          input(id='regular', type="radio", name="regular", value='regular', checked)   
+          label(for='regular') Regular
+          input(id='ironman', type="radio", name="ironman", value='ironman')
+          if img
+            .image-section
+              img(src=img alt='RuneScape Item' style='max-width: 100px; height: auto;')
         button(type='submit') Search Player
+
     
     // Show image if provided
-    if img
-      .image-section
-        img(src=img alt='RuneScape Item' style='max-width: 100px; height: auto;')
+
     
     // Error handling
     if error
@@ -23,40 +30,62 @@ block content
         p= error
     
     // Results table
-    if data.skills && data.skills.length > 0
+    if data
+      h2 Stats for #{playerName || 'Player'}
       .results-section
-        h2 Stats for #{playerName || 'Player'}
-        
+        div
+          table.stats-table(border='1' style='border-collapse: collapse; width: 100%; margin-top: 20px;')
+            thead
+              tr
+                th(style='padding: 10px; background-color: #f5f5f5;') Skill
+                th(style='padding: 10px; background-color: #f5f5f5;') Rank  
+                th(style='padding: 10px; background-color: #f5f5f5;') Level
+                th(style='padding: 10px; background-color: #f5f5f5;') Experience
+            tbody
+              each skill in data.skills
+                tr
+                  td(style='padding: 8px; border: 1px solid #ddd;')= skill.name
+                  td(style='padding: 8px; border: 1px solid #ddd;')= skill.rank === -1 ? '-' : skill.rank
+                  td(style='padding: 8px; border: 1px solid #ddd;')= skill.level
+                  td(style='padding: 8px; border: 1px solid #ddd;')= skill.xp
+      .results-section
         table.stats-table(border='1' style='border-collapse: collapse; width: 100%; margin-top: 20px;')
           thead
             tr
-              th(style='padding: 10px; background-color: #f5f5f5;') Skill
-              th(style='padding: 10px; background-color: #f5f5f5;') Rank  
-              th(style='padding: 10px; background-color: #f5f5f5;') Level
-              th(style='padding: 10px; background-color: #f5f5f5;') Experience
+              th(style='padding: 10px; background-color: #f5f5f5;') Boss
+              th(style='padding: 10px; background-color: #f5f5f5;') Killcount
+              th(style='padding: 10px; background-color: #f5f5f5;') Rank
           tbody
-            each skill in data.skills
-              tr
-                td(style='padding: 8px; border: 1px solid #ddd;')= skill.name
-                td(style='padding: 8px; border: 1px solid #ddd;')= skill.rank === '-1' ? 'Unranked' : skill.rank
-                td(style='padding: 8px; border: 1px solid #ddd;')= skill.level
-                td(style='padding: 8px; border: 1px solid #ddd;')= skill.xp
+            //19 is the ID of Abyssal Sire, first boss listed
+            each activity in data.activities
+              if activity.id > 18
+                tr
+                  td(style='padding: 8px; border: 1px solid #ddd;')= activity.name
+                  td(style='padding: 8px; border: 1px solid #ddd;')= activity.score === -1 ? '-' : activity.score
+                  td(style='padding: 8px; border: 1px solid #ddd;')= activity.rank === -1 ? '-' : activity.rank
     else if playerName && !error
       .no-data
         p No stats found for #{playerName}
 
   style.
     .container {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 20px;
     }
-    
+    @media (max-width:768px) {
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    }
     .search-section {
       margin-bottom: 30px;
       padding: 20px;
       background-color: #f9f9f9;
       border-radius: 8px;
+      max-width: 600px;
     }
     
     .form-group {
@@ -77,6 +106,14 @@ block content
       border-radius: 4px;
       font-size: 16px;
     }
+
+    .radio-group {
+      display: flex;
+    }
+
+    .form-group radio {
+
+    }
     
     button[type="submit"] {
       background-color: #007bff;
@@ -96,10 +133,12 @@ block content
       color: #333;
       border-bottom: 2px solid #007bff;
       padding-bottom: 10px;
+      flex: 1;
     }
     
     .stats-table {
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 400;
     }
     
     .image-section {
